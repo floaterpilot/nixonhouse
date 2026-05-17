@@ -24,25 +24,22 @@ export const previewCards = [
 export const dashboardSections = [
   {
     title: 'Media',
-    description: 'Watch, listen, request, organize, and check the library pipeline.',
+    description: 'Personal media, music, and video shortcuts.',
     links: [
       { label: 'Plex', href: '#', note: 'Streaming' },
-      { label: 'Jellyfin', href: '#', note: 'Backup player' },
+      { label: 'Jellyfin', href: '#', note: 'Media library' },
       { label: 'Spotify', href: '#spotify', note: 'Personal audio' },
-      { label: 'Overseerr', href: '#', note: 'Requests' },
-      { label: 'Radarr', href: '#', note: 'Movies' },
-      { label: 'Sonarr', href: '#', note: 'TV' }
+      { label: 'YouTube', href: 'https://www.youtube.com/', note: 'Video' }
     ]
   },
   {
     title: 'House',
-    description: 'Home automation, documents, network, and infrastructure.',
+    description: 'The big house systems and network surfaces.',
     links: [
       { label: 'Home Assistant', href: '#', note: 'Controls' },
-      { label: 'Paperless', href: '#', note: 'Documents' },
-      { label: 'Proxmox', href: '#', note: 'Hosts' },
-      { label: 'UniFi', href: '#', note: 'Network' },
-      { label: 'Grafana', href: '#', note: 'Monitoring' }
+      { label: 'Reolink', href: '#', note: 'Cameras' },
+      { label: 'Deco', href: '#', note: 'Network' },
+      { label: 'Paperless', href: '#', note: 'Documents' }
     ]
   }
 ];

@@ -4,6 +4,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { config } from './src/config.mjs';
+import { getCubs } from './src/cubs.mjs';
+import { getNews } from './src/news.mjs';
 import { Store } from './src/store.mjs';
 import { randomId, verifyPassword } from './src/security.mjs';
 import {
@@ -21,7 +23,8 @@ import {
   dashboardPage,
   landingPage,
   loginPage,
-  notFoundPage
+  notFoundPage,
+  weatherPage
 } from './src/templates.mjs';
 
 const SESSION_COOKIE = 'nixonhouse_session';
@@ -229,6 +232,15 @@ export function createApp({ cfg = config, store } = {}) {
           return;
         }
         send(res, 200, dashboardPage(ctx));
+        return;
+      }
+
+      if (isRead && url.pathname === '/weather') {
+        if (!ctx.user) {
+          redirect(res, '/login');
+          return;
+        }
+        send(res, 200, weatherPage(ctx));
         return;
       }
 
@@ -449,6 +461,34 @@ export function createApp({ cfg = config, store } = {}) {
 
         try {
           sendJson(res, 200, await getWeather(cfg));
+        } catch (error) {
+          sendJson(res, 502, { error: error.message });
+        }
+        return;
+      }
+
+      if (isRead && url.pathname === '/api/cubs') {
+        if (!ctx.user) {
+          sendJson(res, 401, { error: 'Authentication required.' });
+          return;
+        }
+
+        try {
+          sendJson(res, 200, await getCubs());
+        } catch (error) {
+          sendJson(res, 502, { error: error.message });
+        }
+        return;
+      }
+
+      if (isRead && url.pathname === '/api/news') {
+        if (!ctx.user) {
+          sendJson(res, 401, { error: 'Authentication required.' });
+          return;
+        }
+
+        try {
+          sendJson(res, 200, await getNews());
         } catch (error) {
           sendJson(res, 502, { error: error.message });
         }

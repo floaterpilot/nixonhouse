@@ -15,6 +15,11 @@ function formatTemp(value) {
   return Number.isFinite(value) ? `${Math.round(value)}°F` : '--';
 }
 
+function formatDateTime(value, options = {}) {
+  if (!value) return '--';
+  return new Intl.DateTimeFormat([], options).format(new Date(value));
+}
+
 async function loadWeather() {
   const panel = document.querySelector('[data-weather-panel]');
   if (!panel) return;
@@ -151,5 +156,127 @@ async function loadSpotify() {
   }
 }
 
+function gameTile(game) {
+  const tile = document.createElement('a');
+  tile.className = 'game-tile';
+  tile.href = game.links?.gamecenter || 'https://www.mlb.com/cubs/schedule';
+  tile.target = '_blank';
+  tile.rel = 'noreferrer';
+
+  const label = document.createElement('span');
+  label.className = 'game-label';
+  label.textContent = game.label;
+
+  const matchup = document.createElement('strong');
+  matchup.textContent = game.matchup;
+
+  const detail = document.createElement('small');
+  detail.textContent = `${formatDateTime(game.date, {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  })} · ${game.venue}`;
+
+  const result = document.createElement('span');
+  result.className = 'game-result';
+  result.textContent = game.result;
+
+  const starters = document.createElement('small');
+  starters.textContent = `${game.starters?.away || 'TBD'} vs ${game.starters?.home || 'TBD'}`;
+
+  tile.append(label, matchup, detail, result, starters);
+  return tile;
+}
+
+async function loadCubs() {
+  const strip = document.querySelector('[data-cubs-games]');
+  const videoLink = document.querySelector('[data-cubs-video]');
+  if (!strip && !videoLink) return;
+
+  try {
+    const response = await fetch('/api/cubs', { headers: { accept: 'application/json' } });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Cubs unavailable');
+    }
+
+    if (videoLink && data.latestVideo?.url) {
+      videoLink.href = data.latestVideo.url;
+      videoLink.textContent = 'Latest Locked On Cubs';
+      videoLink.title = data.latestVideo.title || '';
+    }
+
+    if (strip) {
+      strip.replaceChildren();
+      for (const game of data.games || []) {
+        strip.append(gameTile(game));
+      }
+    }
+  } catch (error) {
+    if (strip) {
+      strip.replaceChildren();
+      const fallback = document.createElement('div');
+      fallback.className = 'game-tile placeholder';
+      fallback.textContent = error.message;
+      strip.append(fallback);
+    }
+  }
+}
+
+function newsItem(item) {
+  const link = document.createElement('a');
+  link.className = 'news-feed-item';
+  link.href = item.url;
+  link.target = '_blank';
+  link.rel = 'noreferrer';
+
+  const source = document.createElement('span');
+  source.textContent = `${item.source || 'Feed'} · ${formatDateTime(item.published, {
+    month: 'short',
+    day: 'numeric'
+  })}`;
+
+  const title = document.createElement('strong');
+  title.textContent = item.title;
+
+  const summary = document.createElement('small');
+  summary.textContent = item.summary || '';
+
+  link.append(source, title, summary);
+  return link;
+}
+
+async function loadNews() {
+  const feed = document.querySelector('[data-news-feed]');
+  const source = document.querySelector('[data-news-source]');
+  if (!feed) return;
+
+  try {
+    const response = await fetch('/api/news', { headers: { accept: 'application/json' } });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'News unavailable');
+    }
+
+    setText(source, data.source || 'Feed');
+    feed.replaceChildren();
+    for (const item of data.items || []) {
+      feed.append(newsItem(item));
+    }
+  } catch (error) {
+    feed.replaceChildren();
+    const fallback = document.createElement('div');
+    fallback.className = 'news-feed-item placeholder';
+    fallback.textContent = error.message;
+    feed.append(fallback);
+  }
+}
+
 loadWeather();
 loadSpotify();
+loadCubs();
+loadNews();

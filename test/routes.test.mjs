@@ -113,7 +113,14 @@ test('admin users can reach admin while normal users cannot', async () => {
   assert.equal(dashboard.status, 200);
   assert.match(dashboardHtml, /Spotify/);
   assert.match(dashboardHtml, /9to5Mac/);
+  assert.match(dashboardHtml, /Game strip/);
   assert.doesNotMatch(dashboardHtml, /Downloads/);
+
+  const weather = await fetch(`${baseUrl}/weather`, {
+    headers: { cookie: adminCookie }
+  });
+  assert.equal(weather.status, 200);
+  assert.match(await weather.text(), /Radar/);
 
   const userLogin = await fetch(`${baseUrl}/login`, {
     method: 'POST',

@@ -177,23 +177,58 @@ export function changePasswordPage(ctx, message = '', isError = false) {
   });
 }
 
-export function dashboardPage(ctx) {
+function spotifyPanel(ctx) {
   const spotifyConnected = Boolean(ctx.user.integrations?.spotify);
-  const sections = dashboardSections
-    .map(
-      (section) => `
-        <section class="dashboard-card">
-          <div>
-            <h2>${escapeHtml(section.title)}</h2>
-            <p>${escapeHtml(section.description)}</p>
-          </div>
-          <div class="quick-grid">
-            ${linkList(section.links)}
-          </div>
-        </section>
-      `
-    )
-    .join('');
+
+  return `
+    <article id="spotify" class="media-spotify" data-spotify-panel data-spotify-configured="${ctx.spotifyConfigured ? 'true' : 'false'}">
+      <div class="panel-heading">
+        <p class="eyebrow">Spotify</p>
+        <span data-spotify-status>${spotifyConnected ? 'Connected' : 'Personal'}</span>
+      </div>
+      <div class="spotify-body" data-spotify-body>
+        <div class="spotify-art" data-spotify-art aria-hidden="true">SP</div>
+        <div>
+          <h3 data-spotify-title>${spotifyConnected ? 'Loading Spotify' : 'Connect Spotify'}</h3>
+          <p data-spotify-subtitle>${spotifyConnected ? 'Checking current playback...' : 'Not connected'}</p>
+        </div>
+      </div>
+      <div class="spotify-actions">
+        ${
+          spotifyConnected
+            ? `<a class="button small primary" data-spotify-open href="https://open.spotify.com/" target="_blank" rel="noreferrer">Open</a>
+              <form method="post" action="/spotify/disconnect" class="inline-form">
+                ${csrfInput(ctx)}
+                <button class="button small ghost" type="submit">Disconnect</button>
+              </form>`
+            : ctx.spotifyConfigured
+              ? `<a class="button small primary" href="/spotify/connect">Connect</a>`
+              : `<span class="button small ghost disabled">Setup needed</span>`
+        }
+      </div>
+    </article>
+  `;
+}
+
+function dashboardSection(section, ctx) {
+  const isMedia = section.title === 'Media';
+
+  return `
+    <section class="dashboard-card action-card ${isMedia ? 'media-card' : ''}">
+      <div>
+        <h2>${escapeHtml(section.title)}</h2>
+        <p>${escapeHtml(section.description)}</p>
+      </div>
+      <div class="quick-grid">
+        ${linkList(section.links)}
+      </div>
+      ${isMedia ? spotifyPanel(ctx) : ''}
+    </section>
+  `;
+}
+
+export function dashboardPage(ctx) {
+  const sections = dashboardSections.map((section) => dashboardSection(section, ctx)).join('');
 
   return layout({
     title: 'Dashboard',
@@ -202,7 +237,7 @@ export function dashboardPage(ctx) {
     bodyClass: 'app-body',
     content: `
       <main class="dashboard-shell">
-        <section class="dashboard-hero">
+        <section class="dashboard-hero soft-hero">
           <div>
             <p class="eyebrow">Signed in as ${escapeHtml(ctx.user.displayName || ctx.user.username)}</p>
             <h1>House dashboard</h1>
@@ -210,10 +245,95 @@ export function dashboardPage(ctx) {
           <div class="status-pill">Private</div>
         </section>
 
-        <section class="weather-suite">
-          <article class="weather-panel" data-weather-panel>
+        <section class="dashboard-stack">
+          <a class="dashboard-card weather-summary-card" href="/weather" data-weather-panel>
             <div class="panel-heading">
               <p class="eyebrow">Weather</p>
+              <span data-weather-label>Lakewood Ranch</span>
+            </div>
+            <div class="weather-summary-layout">
+              <div>
+                <div class="weather-reading" data-weather-reading>--</div>
+                <p class="weather-detail" data-weather-detail>Checking the forecast...</p>
+              </div>
+              <div class="weather-metrics">
+                <div>
+                  <span>Feels like</span>
+                  <strong data-weather-feels>--</strong>
+                </div>
+                <div>
+                  <span>Precip</span>
+                  <strong data-weather-precip>--</strong>
+                </div>
+                <div>
+                  <span>Wind</span>
+                  <strong data-weather-wind>--</strong>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <section class="dashboard-card cubs-card">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Cubs</p>
+                <h2>Game strip</h2>
+              </div>
+              <a class="latest-video-link" data-cubs-video href="https://www.youtube.com/c/LockedOnCubs" target="_blank" rel="noreferrer">Locked On Cubs</a>
+            </div>
+            <div class="quick-grid cubs-links">
+              ${linkList(cubsLinks)}
+            </div>
+            <div class="game-strip" data-cubs-games>
+              <div class="game-tile placeholder">Loading Cubs schedule...</div>
+            </div>
+          </section>
+
+          <section class="dashboard-card news-card">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">News</p>
+                <h2>Tech feed</h2>
+              </div>
+              <span data-news-source>The Verge</span>
+            </div>
+            <div class="quick-grid news-links">
+              ${linkList(newsLinks)}
+            </div>
+            <div class="news-feed" data-news-feed>
+              <div class="news-feed-item placeholder">Loading tech headlines...</div>
+            </div>
+          </section>
+        </section>
+
+        <div class="dashboard-grid">
+          ${sections}
+        </div>
+      </main>
+    `
+  });
+}
+
+export function weatherPage(ctx) {
+  return layout({
+    title: 'Weather',
+    ctx,
+    active: 'dashboard',
+    bodyClass: 'app-body',
+    content: `
+      <main class="dashboard-shell weather-page">
+        <section class="dashboard-hero soft-hero">
+          <div>
+            <p class="eyebrow">Lakewood Ranch</p>
+            <h1>Weather</h1>
+          </div>
+          <a class="button ghost" href="/dashboard">Dashboard</a>
+        </section>
+
+        <section class="weather-detail-grid">
+          <article class="weather-panel detail-weather" data-weather-panel>
+            <div class="panel-heading">
+              <p class="eyebrow">Now</p>
               <span data-weather-label>Loading</span>
             </div>
             <div class="weather-reading" data-weather-reading>--</div>
@@ -233,13 +353,6 @@ export function dashboardPage(ctx) {
               </div>
             </div>
           </article>
-          <article class="dashboard-card radar-card">
-            <div class="panel-heading">
-              <p class="eyebrow">Radar</p>
-              <a href="#" data-radar-link target="_blank" rel="noreferrer">Open</a>
-            </div>
-            <img data-radar-image alt="Local weather radar loop">
-          </article>
           <article class="dashboard-card hourly-card">
             <div class="panel-heading">
               <p class="eyebrow">Hourly</p>
@@ -251,54 +364,13 @@ export function dashboardPage(ctx) {
           </article>
         </section>
 
-        <section class="top-grid">
-          <article id="spotify" class="dashboard-card compact spotify-card" data-spotify-panel data-spotify-configured="${ctx.spotifyConfigured ? 'true' : 'false'}">
-            <div class="panel-heading">
-              <p class="eyebrow">Spotify</p>
-              <span data-spotify-status>${spotifyConnected ? 'Connected' : 'Personal'}</span>
-            </div>
-            <div class="spotify-body" data-spotify-body>
-              <div class="spotify-art" data-spotify-art aria-hidden="true">SP</div>
-              <div>
-                <h2 data-spotify-title>${spotifyConnected ? 'Loading Spotify' : 'Connect Spotify'}</h2>
-                <p data-spotify-subtitle>${spotifyConnected ? 'Checking current playback...' : 'Not connected'}</p>
-              </div>
-            </div>
-            <div class="spotify-actions">
-              ${
-                spotifyConnected
-                  ? `<a class="button small primary" data-spotify-open href="https://open.spotify.com/" target="_blank" rel="noreferrer">Open</a>
-                    <form method="post" action="/spotify/disconnect" class="inline-form">
-                      ${csrfInput(ctx)}
-                      <button class="button small ghost" type="submit">Disconnect</button>
-                    </form>`
-                  : `<a class="button small primary" href="/spotify/connect">Connect</a>`
-              }
-            </div>
-          </article>
-          <article class="dashboard-card compact">
-            <div class="panel-heading">
-              <p class="eyebrow">Cubs</p>
-              <span>Game day</span>
-            </div>
-            <div class="quick-grid slim">
-              ${linkList(cubsLinks)}
-            </div>
-          </article>
-          <article class="dashboard-card compact">
-            <div class="panel-heading">
-              <p class="eyebrow">News</p>
-              <span>Headlines</span>
-            </div>
-            <div class="quick-grid slim">
-              ${linkList(newsLinks)}
-            </div>
-          </article>
-        </section>
-
-        <div class="dashboard-grid">
-          ${sections}
-        </div>
+        <article class="dashboard-card radar-card">
+          <div class="panel-heading">
+            <p class="eyebrow">Radar</p>
+            <a href="#" data-radar-link target="_blank" rel="noreferrer">Open</a>
+          </div>
+          <img data-radar-image alt="Local weather radar loop">
+        </article>
       </main>
     `
   });
