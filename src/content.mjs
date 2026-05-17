@@ -28,6 +28,7 @@ export const dashboardSections = [
     links: [
       { label: 'Plex', href: '#', note: 'Streaming' },
       { label: 'Jellyfin', href: '#', note: 'Media library' },
+      { label: 'Jellyseerr', href: '#', note: 'Requests' },
       { label: 'Spotify', href: '#spotify', note: 'Personal audio' },
       { label: 'YouTube', href: 'https://www.youtube.com/', note: 'Video' }
     ]
