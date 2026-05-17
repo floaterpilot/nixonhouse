@@ -1,0 +1,8 @@
+.DS_Store
+.env
+node_modules/
+npm-debug.log*
+
+# Local runtime state. Keep password/session data out of git.
+data/*.json
+!data/.gitkeep

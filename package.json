@@ -1,0 +1,16 @@
+{
+  "name": "nixonhouse",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Private Nixon House homelab landing page and admin portal.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "NODE_ENV=development node server.mjs",
+    "test": "node --test",
+    "bootstrap:user": "node scripts/bootstrap-user.mjs"
+  }
+}
