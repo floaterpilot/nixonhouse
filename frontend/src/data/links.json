@@ -1,0 +1,21 @@
+[
+  { "name": "Home Assistant", "url": "http://homeassistant.local:8123", "icon": "🏠", "category": "Home", "quick": true },
+  { "name": "Jellyfin", "url": "http://jellyfin.local:8096", "icon": "🎬", "category": "Media", "quick": true },
+  { "name": "Portainer", "url": "http://portainer.local:9000", "icon": "🐳", "category": "Admin", "quick": true },
+  { "name": "Homepage", "url": "http://homepage.local:3000", "icon": "⌂", "category": "Admin", "quick": true },
+
+  { "name": "Sonarr", "url": "http://sonarr.local:8989", "icon": "📺", "category": "Media" },
+  { "name": "Radarr", "url": "http://radarr.local:7878", "icon": "🎞", "category": "Media" },
+  { "name": "Prowlarr", "url": "http://prowlarr.local:9696", "icon": "🔍", "category": "Media" },
+  { "name": "qBittorrent", "url": "http://qbittorrent.local:8080", "icon": "⬇", "category": "Media" },
+  { "name": "Real-Debrid", "url": "https://real-debrid.com", "icon": "⚡", "category": "Media" },
+
+  { "name": "Proxmox", "url": "https://proxmox.local:8006", "icon": "🖥", "category": "Admin" },
+  { "name": "Unifi", "url": "https://unifi.local", "icon": "📡", "category": "Admin" },
+  { "name": "AdGuard", "url": "http://adguard.local:3000", "icon": "🛡", "category": "Admin" },
+  { "name": "Grafana", "url": "http://grafana.local:3000", "icon": "📊", "category": "Admin" },
+
+  { "name": "GitHub", "url": "https://github.com", "icon": "🐙", "category": "Work" },
+  { "name": "Linear", "url": "https://linear.app", "icon": "▲", "category": "Work" },
+  { "name": "Notion", "url": "https://notion.so", "icon": "📝", "category": "Work" }
+]
