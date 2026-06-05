@@ -1,0 +1,12 @@
+[
+  {
+    "username": "floaterpilot",
+    "passwordHash": "REPLACE_WITH_BCRYPT_HASH",
+    "role": "admin"
+  },
+  {
+    "username": "user2",
+    "passwordHash": "REPLACE_WITH_BCRYPT_HASH",
+    "role": "user"
+  }
+]
