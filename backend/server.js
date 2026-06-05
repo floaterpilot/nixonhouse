@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',').map(s => s.trim());
 app.use(cors({ origin: (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)) }));
 app.use(express.json());
+app.use((req, _res, next) => { console.log(`${req.method} ${req.path} origin=${req.headers.origin || '-'}`); next(); });
 
 app.use('/auth', authRoute);
 app.use('/api/weather', verifyToken, weatherRoute);
