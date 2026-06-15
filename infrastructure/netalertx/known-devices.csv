@@ -1,0 +1,17 @@
+# Known infrastructure devices for nixonhouse LAN
+# Use this as a reference when labeling devices in NetAlertX:
+# Devices > click device > Edit > set Name, Owner, and toggle Favorite (★)
+#
+# Format: IP, Hostname, Owner, Notes, Mark-as-Favorite
+#
+IP,Hostname,Owner,Notes,Favorite
+192.168.68.81,reolink-nvr,nixonhouse,Reolink NVR - security cameras,No
+192.168.68.83,nas,nixonhouse,NAS - network attached storage,Yes
+192.168.68.105,proxmox,nixonhouse,Proxmox hypervisor host,Yes
+192.168.68.110,docker-vm,nixonhouse,Docker VM on Proxmox,Yes
+192.168.68.119,home-assistant,nixonhouse,Home Assistant VM,Yes
+192.168.68.131,pi1,nixonhouse,Raspberry Pi 1,Yes
+192.168.68.132,pi2,nixonhouse,Raspberry Pi 2,Yes
+192.168.68.133,pi3,nixonhouse,Raspberry Pi 3,Yes
+192.168.68.134,pi4,nixonhouse,Raspberry Pi 4,Yes
+192.168.68.135,pi5,nixonhouse,Raspberry Pi 5,Yes

@@ -1,0 +1,13 @@
+services:
+  netalertx:
+    image: ghcr.io/jokobsk/netalertx:latest
+    container_name: netalertx
+    network_mode: host        # Required for arp-scan to see LAN devices
+    volumes:
+      - ./config:/app/config  # app.conf lives here
+      - ./db:/app/db          # SQLite database
+      - ./logs:/app/log
+    environment:
+      - TZ=America/New_York
+      - PORT=20211
+    restart: unless-stopped
