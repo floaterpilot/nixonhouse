@@ -7,6 +7,7 @@ const weatherRoute = require('./routes/weather');
 const cubsRoute = require('./routes/cubs');
 const sportsRoute = require('./routes/sports');
 const newsRoute = require('./routes/news');
+const financeRoute = require('./routes/finance');
 const { verifyToken } = require('./middleware/auth');
 
 const app = express();
@@ -22,5 +23,6 @@ app.use('/api/weather', verifyToken, weatherRoute);
 app.use('/api/cubs', verifyToken, cubsRoute);
 app.use('/api/sports', verifyToken, sportsRoute);
 app.use('/api/news', verifyToken, newsRoute);
+app.use('/api/finance', verifyToken, financeRoute);
 
 app.listen(PORT, () => console.log(`NixonHouse backend running on port ${PORT}`));
