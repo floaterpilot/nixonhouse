@@ -6,6 +6,7 @@ import Media from './pages/Media';
 import Cubs from './pages/Cubs';
 import Sports from './pages/Sports';
 import News from './pages/News';
+import Finance from './pages/Finance';
 import BottomNav from './components/BottomNav';
 
 function PrivateLayout({ children }) {
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/cubs" element={<PrivateLayout><Cubs /></PrivateLayout>} />
         <Route path="/sports" element={<PrivateLayout><Sports /></PrivateLayout>} />
         <Route path="/news" element={<PrivateLayout><News /></PrivateLayout>} />
+        <Route path="/finance" element={<PrivateLayout><Finance /></PrivateLayout>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

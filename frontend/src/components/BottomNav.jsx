@@ -7,6 +7,7 @@ const NAV = [
   { to: '/', label: 'Home', icon: '⌂' },
   { to: '/links', label: 'Links', icon: '⊞' },
   { to: '/media', label: 'Media', icon: '▶' },
+  { to: '/finance', label: 'Finance', icon: '$' },
   { to: '/cubs', label: 'Cubs', icon: '⚾' },
   ...(inFootballSeason ? [{ to: '/sports', label: 'Sports', icon: '🏈' }] : []),
   { to: '/news', label: 'News', icon: '◈' },
